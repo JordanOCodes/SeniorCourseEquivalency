@@ -1,0 +1,17 @@
+{% extends "template.html" %}
+{% block content %}
+
+<div class="testbox">
+        <form method="POST">
+    <h2 style="text-align:center">Please select the UF class to make a request for</h2>
+            <p style="text-align:center; color: darkred; size: 20px"><b><i>{{ error_message | safe }}</i></b></p>
+            <br>
+            <select name="course" id="course" style="height:200px; width:700px;font-size: 25px;margin: 0 auto;display: block;top:100%;vertical-align: top;" size="6">
+                {{ course_select | safe}}
+            </select>
+            <br>
+            <input class="submit" style="background-color: #008CBA;" type="submit", name="submit_button" value="Select">
+
+        </form>
+</div>
+{% endblock %}  

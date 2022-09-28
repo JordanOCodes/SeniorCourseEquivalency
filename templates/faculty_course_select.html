@@ -1,0 +1,18 @@
+{% extends "template.html" %}
+{% block content %}
+
+<div class="testbox">
+        <form method="POST">
+    <h2 style="text-align:center">Please select a class that you would like to modify.</h2>
+            <p style="text-align:center; color: darkred; size: 20px"><b><i>{{ text_after_add | safe }}</i></b></p>
+            <br>
+            <select name="course" id="course" style="height:200px; width:700px;font-size: 25px;margin: 0 auto;display: block;top:100%;vertical-align: top;" size="6">
+                <option value="NEWCOURSE">Select This Option to Add a New Course</option>
+                {{ course_select | safe}}
+            </select>
+            <br>
+            <input class="submit" style="background-color: #008CBA;" type="submit", name="submit_button" value="Select">
+
+        </form>
+</div>
+{% endblock %}

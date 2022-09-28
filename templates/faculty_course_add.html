@@ -1,0 +1,46 @@
+{% extends "template.html" %}
+{% block content %}
+
+<div class="testbox">
+        <form method="POST">
+    <h2 style="text-align:center">Please select a class that you would like to modify.</h2>
+            <p style="text-align:center; color: darkred; size: 20px"><b><i>{{ error_message | safe }}</i></b></p>
+            <hr/>
+
+
+            <fieldset>
+                <legend>Course Information</legend>
+                <div class="item">
+                    <div class="name-item">
+                        <div>
+                            <label for="course_id">Course ID (no space)<span>*</span></label>
+                            <input type="text" name="course_id" placeholder="COP3502" maxlength="10" required/>
+                        </div>
+                        <div>
+                            <label for="course_title">Course Title<span>*</span></label>
+                            <input type="text" name="course_title" placeholder="Programming Fundamentals 1" maxlength="150" required/>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="item">
+                    <div class="name-item">
+                        <div>
+                            <label for="credits">Credits (Maybe not add)<span>*</span></label>
+                            <input type="number" name="credits" value="3" min="0" max="9" required/>
+                        </div>
+                        <div>
+                            <label for="department">Department offering course (Maybe not add)<span>*</span></label>
+                            <input type="text" name="department" placeholder="CISE" maxlength="50" required/>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <p>Please note: It is recommended to have at least a few attributes, but it is more than okay to leave many empty.</p>
+
+            {{ attribute_html | safe }}
+            </fieldset>
+            <input class="submit" style="background-color: #008CBA;width: 200px;" type="submit", name="submit_button" value="Submit New Course">
+        </form>
+</div>
+{% endblock %}  >

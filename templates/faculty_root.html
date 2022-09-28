@@ -1,0 +1,14 @@
+{% extends "template.html" %}
+{% block content %}
+
+<div class="testbox">
+        <form action="/">
+    <h2 style="text-align:center">Welcome to the root faculty page</h2>
+<ul style="text-align:center">
+  <li><a href="#news">Check on Pending Requests</a></li>
+  <li><a href="{{ url_for('faculty_course_select') }}" class="active">Change and/or Update The Courses Database</a></li>
+  <li><a href="#about">Look at The Archived Data</a></li>
+</ul>
+        </form>
+</div>
+{% endblock %}

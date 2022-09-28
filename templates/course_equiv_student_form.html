@@ -1,0 +1,166 @@
+{% extends "template.html" %}
+{% block content %}
+
+
+    <div class="testbox">
+        <form action="/">
+            <p>Please fill out with the information.</p>
+            <hr/>
+
+
+            <fieldset>
+                <legend>Student Information</legend>
+                <div class="item">
+                    <div class="name-item">
+                        <div>
+                            <label for="first_name">First Name<span>*</span></label>
+                            <input type="text" name="first_name" placeholder="James" required/>
+                        </div>
+                        <div>
+                            <label for="last_name">Last Name<span>*</span></label>
+                            <input type="text" name="last_name" placeholder="Smith" required/>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <label for="ufid">UFID (8 digit number)<span>*</span></label>
+                        <input type="text" name="ufid" pattern="[0-9]{8}" required/>
+                    </div>
+
+                    <div class="item">
+                        <label for="student_email">E-mail Address (To receive a receipt of this form after you finish)
+                            <span>*</span></label>
+                        <input type="email" name="student_email" maxlength="100" required/>
+                    </div>
+                </div>
+            </fieldset>
+            </br>
+
+            <fieldset>
+                <legend>Course At UF</legend>
+                <div class="item">
+                    <div class="name-item">
+                        <div>
+                            <label for="course_id">Course ID</label>
+                            <input type="text" name="course_id" value="{{ course_id | safe }}" readonly=/>
+                        </div>
+                        <div>
+                            <label for="course_title">Course Title: {{ course_title | safe}}</label>
+                            <input type="text" name="course_title" value="{{ course_title | safe }}" readonly/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="name-item">
+                        <div>
+                            <label for="credits">Credits: {{ credits | safe}}</label>
+                            <input type="number" name="credits" value="{{ credits | safe }}" readonly/>
+                        </div>
+                        <div>
+                            <label for="department">Department offering course: {{ department | safe}}</label>
+                            <input type="text" name="department" value="{{ department | safe}}" readonly/>
+                        </div>
+                    </div>
+                </div>
+
+                {{ attribute_html | safe }}
+
+
+
+            </fieldset> <br>
+
+
+            <fieldset>
+                <legend>Requested Course Substitution</legend>
+
+                <div class="item">
+                    <div class="name-item">
+                        <div>
+                            <label for="sub_course_id">Course ID<span>*</span></label>
+                            <input type="text" name="sub_course_id"  placeholder="COP3502" maxlength="10" required=/>
+                        </div>
+                        <div>
+                            <label for="sub_course_title">Course Title<span>*</span></label>
+                            <input type="text" name="sub_course_title" placeholder="Programming Fundamentals 1" maxlength="150" required/>
+                        </div>
+                    </div>
+                </div>
+
+
+            <div class="item">
+                    <div class="name-item">
+                        <div>
+                            <label for="sub_credits">Credits<span>*</span></label>
+                            <input type="number" name="sub_credits" value="3" min="0" max="9" required/>
+                        </div>
+                        <div>
+                            <label for="sub_university">University Where Course was taken<span>*</span></label>
+                            <input type="text" name="sub_department" placeholder="CISE" maxlength="100" required/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="name-item">
+                        <div>
+                            <label for="sub_term">Term Taken<span>*</span></label>
+                            <input type="text" name="sub_term" placeholder="Fall 2022" maxlength="15" required/>
+                        </div>
+                        <div>
+                            <label for="sub_university">Grade Received<span>*</span></label>
+                            <input type="text" name="sub_department" placeholder="University of Central Florida" maxlength="100" required/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item">
+                        <label for="sub_email">Instructor's E-mail Address<span>*</span></label>
+                        <input type="email" name="student_email" maxlength="100" required/>
+                    </div>
+
+                <div class="item">
+                    <div class="name-item">
+                        <div>
+                            <label for="sub_textbook">Primary Textbook Title<span>*</span></label>
+                            <input type="text" name="sub_textbook" placeholder="This is a book title" maxlength="100" required/>
+                        </div>
+                        <div>
+                            <label for="sub_author">Primary Textbook's Author<span>*</span></label>
+                            <input type="text" name="sub_author" placeholder="This is an author's name" maxlength="100" required/>
+                        </div>
+                    </div>
+                </div>
+
+                    </fieldset> <br>
+
+
+            <fieldset>
+                <legend>Substitute Course Documents</legend>
+                  <label for="syllabus">Submit Your Syllabus Here<span style="color: red">*</span></label>
+                <input type="file" id="syllabus" name="syllabus" required><br><br>
+
+                <label for="catalog">Submit Your University Catalog Course Description Here<span style="color: red">*</span></label>
+                <input type="file" id="catalog" name="catalog" required><br><br>
+
+                <label for="catalog">Submit Any Other Materials Used In The Course, Especially Assignments</label>
+                <input type="file" id="catalog" name="catalog" multiple><br><br>
+
+            </fieldset><br>
+
+            <fieldset>
+                <legend>Other Comments</legend>
+                 <div class="item">
+                        <label for="other_comments">Feel Free To Leave Any Other Comments Here About Your Course Equivalency Request<span>*</span></label>
+                        <input type="text" name="other_comments" maxlength="200" required/>
+                    </div>
+
+            </fieldset><br>
+
+
+                        <div class="btn-block">
+                            <button type="submit" href="/">SUBMIT</button>
+                        </div>
+        </form>
+    </div>
+{% endblock %}

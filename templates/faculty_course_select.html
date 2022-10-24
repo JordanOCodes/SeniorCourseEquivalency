@@ -4,14 +4,39 @@
 <div class="testbox">
         <form method="POST">
     <h2 style="text-align:center">Please select a class that you would like to modify.</h2>
-            <p style="text-align:center; color: darkred; size: 20px"><b><i>{{ text_after_add | safe }}</i></b></p>
-            <br>
-            <select name="course" id="course" style="height:200px; width:700px;font-size: 25px;margin: 0 auto;display: block;top:100%;vertical-align: top;" size="6">
+            <p style="text-align:center; color: darkred; font-size: 20px"><b><i>{{ info_text | safe }}</i></b></p>
+
+                <fieldset>
+                <legend>Course Modify</legend>
+    <div style="margin-right: 10%;margin-left: 10%">
+            <h3 style="font-size: 20px;">Course Modify List</h3>
+                <p style="font-size: 15px;">
+                    Below is a list of courses to Modify. At the top of the list is an option to add a new course.
+                    Select that option if you wish to add a course not in the list below. Otherwise, the courses are
+                    listed in order, so please scroll to and select the course you wish to modify.
+                </p>
+            <select name="course" id="course" style="height:250px; width:100%;font-size: 22px;margin: 0 auto;display: block;top:100%;vertical-align: top;" size="10" required>
                 <option value="NEWCOURSE">Select This Option to Add a New Course</option>
-                {{ course_select | safe}}
+                {% for course in course_list %}
+                    {% if course[2] != "N/A" %}
+                        <option value ="{{ course[0] }}">{{ course[0] }}: {{ course[1] }}</option>
+                    {% endif %}
+                 {% endfor%}
+                {% for course in course_list %}
+                    {% if course[2] == "N/A" %}
+                        <option value ="{{ course[0] }}">#{{ course[0] }}: {{ course[1] }}</option>
+                    {% endif %}
+                 {% endfor%}
             </select>
             <br>
-            <input class="submit" style="background-color: #008CBA;" type="submit", name="submit_button" value="Select">
+            <input class="submit" style="background-color: #008CBA;width: 200px;" type="submit", name="submit_button" value="Select">
+    </div>
+</fieldset>
+
+
+
+
+
 
         </form>
 </div>

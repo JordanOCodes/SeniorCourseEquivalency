@@ -1,0 +1,70 @@
+{% extends "template.html" %}
+{% block content %}
+
+<div class="testbox">
+        <form id="request-form" method="POST">
+    <h2 style="text-align:center">Please select a class that you would like REMOVE from the database</h2>
+
+                <fieldset>
+                <legend style="background-color: darkred">Course Deletion</legend>
+    <div style="margin-right: 10%;margin-left: 10%">
+            <h3 style="font-size: 20px;">Delete Course From DataBase</h3>
+                <p style="font-size: 15px;">
+                    If you are here, that means you have admin privileges. Below is a list of all courses in the database.
+                    Select a course that you wish to remove from the database.<br>
+                    Note: You cannot delete a course that currently has pending request for that course, please accept or deny them first.
+                </p>
+            <select name="course" id="course" style="height:250px; width:100%;font-size: 22px;margin: 0 auto;display: block;top:100%;vertical-align: top;" size="10">
+                {% for course in course_list %}
+                    {% if course[2] != "N/A" %}
+                        <option value ="{{ course[0] }}">{{ course[0] }}: {{ course[1] }}</option>
+                    {% endif %}
+                 {% endfor%}
+                {% for course in course_list %}
+                    {% if course[2] == "N/A" %}
+                        <option value ="{{ course[0] }}">#{{ course[0] }}: {{ course[1] }}</option>
+                    {% endif %}
+                 {% endfor%}
+            </select>
+            <br>
+            <input class="submit" style="background-color: #e22526;width: 200px;" type="button" onclick="openForm()" value="DELETE">
+
+
+    </div>
+</fieldset>
+
+                    <div id="popupForm" class="modal">
+              <div class="modal-content">
+                  <div class="popup-form">
+                    <h2>Are you sure you'd like to DELETE this course
+                    </h2>
+                    <button type="button" style="background-color: red;" onclick="checkFinalSubmit()">DELETE</button><br><br>
+                    <button type="button" onclick="closeForm()">Close</button>
+                  </div>
+              </div>
+            </div>
+        </form>
+</div>
+
+
+    <script>
+            function openForm() {
+            let yourSelect = document.getElementById( "course" );
+            if(yourSelect.options[yourSelect.selectedIndex ].value) {
+                document.getElementById("popupForm").style.display = "block";
+            }
+
+            }
+            function closeForm() {
+                document.getElementById("popupForm").style.display = "none";
+            }
+            function checkFinalSubmit(){
+                    let yourSelect = document.getElementById( "course" );
+                    if (confirm("ARE YOU POSITIVE YOU WANT TO DELETE " + yourSelect.options[ yourSelect.selectedIndex ].value )){
+                        document.getElementById("request-form").submit();
+                    }
+
+                }
+
+    </script>
+{% endblock %}

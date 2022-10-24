@@ -36,11 +36,52 @@
                     </div>
                 </div>
                 <hr>
-                <p>Please note: It is recommended to have at least a few attributes, but it is more than okay to leave many empty.</p>
+                <p>Please note: It is recommended to have at least a few topics, but it is more than okay to leave many empty.</p>
 
-            {{ attribute_html | safe }}
+            {{ topic_html | safe }}
             </fieldset>
             <input class="submit" style="background-color: #008CBA;width: 200px;" type="submit", name="submit_button" value="Submit New Course">
         </form>
 </div>
+
+            <script>
+                let timer;
+                let timerStart = Date.now();
+                let timeSpentOnPage = 0;
+
+                function startCounting(){
+                        timerStart = Date.now();
+                        timer = setInterval(function(){
+                            timeSpentOnPage = (Date.now()-timerStart);
+                            let timeSpentOnSiteSecond = parseInt(timeSpentOnPage/1000);
+                            if (timeSpentOnSiteSecond > 2700){ // 2700
+                                var answer = window.confirm("Your Session is about to end.\nDo you wish to continue?\nPress OK within 15 minutes to stay logged in.\nCancel to logout.");
+                                if (answer){
+                                    timerStart = Date.now();
+                                    let request = new XMLHttpRequest();
+                                    request.onload = function() {
+                                          let requestStr = request.responseText;
+                                          if (requestStr === "False"){
+                                              alert("I apologize, but your session has timed out.");
+                                              window.location.replace("{{ url_for('student_root') }}");
+                                          }
+                                      };
+                                    request.open("GET", "/renew_session_lifetime", true);
+                                    request.send();
+                                }
+                                else {
+                                    //
+                                    timerStart = Date.now();
+                                    let request = new XMLHttpRequest();
+                                    request.onload = function() {
+                                    };
+                                    request.open("GET", "/clear_session_lifetime", true);
+                                    request.send();
+                                    window.location.replace("{{ url_for('student_root') }}");
+                                }
+                        }},1000);
+                }
+                startCounting();
+
+            </script>
 {% endblock %}  >

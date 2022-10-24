@@ -3,12 +3,85 @@
 
 <div class="testbox">
         <form action="/">
-    <h2 style="text-align:center">Welcome to the root faculty page</h2>
-<ul style="text-align:center">
-  <li><a href="#news">Check on Pending Requests</a></li>
-  <li><a href="{{ url_for('faculty_course_select') }}" class="active">Change and/or Update The Courses Database</a></li>
-  <li><a href="#about">Look at The Archived Data</a></li>
-</ul>
+    <h2 style="text-align:center; font-size: 25px;">CISE Course Equivalency Request<br>Faculty Root Page</h2>
+            <p style="text-align:center; color: darkred; font-size: 20px"><b><i>{{ info_text | safe }}</i></b></p>
+
+        <div style="margin-right: 10%;margin-left: 10%">
+                <p style="font-size: 15px;text-align: center">
+                    This is the faculty root page for the CISE Course Equivalency Request Application.<br>
+                    Please few the options below and select the appropriate action you wish to do.<br>
+                    You may not have authorization to perform all actions.<br>
+                    Thank you for being here!<br>
+                </p>
+
+    </div>
+
+
+
+<fieldset>
+                <legend>Review Student Request</legend>
+    <div style="margin-right: 10%;margin-left: 10%">
+            <h3 style="font-size: 20px;">Review Student Request</h3>
+                <p style="font-size: 15px;">
+                    This section will allow authorized faculty members to review requests for courses they are approved
+                    to review.
+                </p>
+        <a href="{{ url_for('faculty_request_select') }}" style="text-decoration: none">
+        <input class="submit" style="background-color: #008CBA;width: 200px;" type="button", name="submit_button" value="Review Request">
+            </a>
+    </div>
+</fieldset>
+
+<br><br>
+
+<fieldset>
+    <legend>Look at Archived Data</legend>
+  <div style="margin-right: 10%;margin-left: 10%">
+            <h3 style="font-size: 20px;">Look at Archived Data</h3>
+                <p style="font-size: 15px;">
+                    This section will allow you to look at approved course requests that have been archived.
+                    You will need the request's UFID in order to look up their previous request.
+                </p>
+        <a href="{{ url_for('faculty_root') }}" style="text-decoration: none">
+        <input class="submit" style="background-color: #008CBA;width: 200px;" type="button", name="submit_button" value="View Archive">
+            </a>
+    </div>
+</fieldset>
+
+            <br><br>
+
+            <fieldset>
+    <legend>Modify the Course Database</legend>
+  <div style="margin-right: 10%;margin-left: 10%">
+            <h3 style="font-size: 20px;">Modify the Course Database</h3>
+                <p style="font-size: 15px;">
+                    This section will allow authorized faculty members to modify and add course in relation to the course
+                    database. This includes adding topics, names, credits and departments for each class. As well as,
+                    adding completely new classes to the database with a unique id.
+                </p>
+        <a href="{{ url_for('faculty_course_select') }}" style="text-decoration: none">
+        <input class="submit" style="background-color: #008CBA;width: 250px;" type="button", name="submit_button" value="Modify Course Database">
+            </a>
+    </div>
+</fieldset>
+
+            {% if admin_privileges %}
+
+            <br><br>
+<fieldset>
+    <legend style="background-color: darkred">Remove a course from the database</legend>
+  <div style="margin-right: 10%;margin-left: 10%">
+            <h3 style="font-size: 20px;">Remove a course</h3>
+                <p style="font-size: 15px;">
+                    This section is for admin only, if you are seeing this, that means you have admin access.<br>
+                    This section will allow you the removal of courses from the database.
+                </p>
+        <a href="{{ url_for('faculty_course_delete') }}" style="text-decoration: none">
+        <input class="submit" style="background-color: #e22526;width: 300px;" type="button" , name="submit_button" value="Delete Course From Database">
+            </a>
+    </div>
+</fieldset>
+    {% endif %}
         </form>
 </div>
 {% endblock %}

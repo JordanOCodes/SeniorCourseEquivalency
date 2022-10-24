@@ -1,0 +1,60 @@
+{% extends "template.html" %}
+{% block content %}
+
+<div class="testbox">
+        <form method="POST">
+    <h2 style="text-align:center; font-size: 25px;">CISE Course Equivalency Request<br>Beta Login Page</h2>
+         <p style="font-size: 15px;text-align: center;">
+                Welcome to the Beta of CISE Course Equivalency Request!<br>
+                This page is meant to imitate the information that would be given by Shibboleth.<br>
+                </p>
+            <div class="item">
+                    <div class="name-item">
+                        <div>
+                            <label for="first_name">First Name<span>*</span></label>
+                            <input type="text" name="first_name" placeholder="James" maxlength="50" required/>
+                        </div>
+                        <div>
+                            <label for="last_name">Last Name<span>*</span></label>
+                            <input type="text" name="last_name" placeholder="Smith" maxlength="50" required/>
+                        </div>
+                    </div>
+            </div>
+                    <div class="item">
+                        <label for="ufid">UFID (8 digit number.)<span>*</span></label>
+                        <input type="text" name="ufid" pattern="[0-9]{8}" required/>
+                    </div>
+
+                    <div class="item">
+                        <label for="student_email">E-mail Address (To receive a receipt of this form after you finish)
+                            <span>*</span></label>
+                        <input type="email" name="student_email" maxlength="100" required/>
+                    </div>
+            <div class="item">
+                        <label for="authorization">Authorization level ("Faculty" or "Student")
+                            <span>*</span></label>
+                        <input type="text" name="authorization" maxlength="10" required/>
+                    </div>
+            <div class="item">
+                <label for="course">Faculty: courses that you are authorized to review (Ctrl + left click to click more than one, or hold click and drag.)<span>*</span></label>
+                <select name="course" id="course" style="height:200px; width:100%;font-size: 18px;margin: 0 auto;display: block;top:100%;vertical-align: top;" size="6" multiple>
+                    {% for course in course_list %}
+                    {% if course[2] != "N/A" %}
+                        <option value ="{{ course[0] }}">{{ course[0] }}: {{ course[1] }}</option>
+                    {% endif %}
+                 {% endfor%}
+                {% for course in course_list %}
+                    {% if course[2] == "N/A" %}
+                        <option value ="{{ course[0] }}">#{{ course[0] }}: {{ course[1] }}</option>
+                    {% endif %}
+                 {% endfor%}
+            </select>
+                    </div>
+        <div class="item">
+                        <label for="admin">Admin Access (Simply write "Admin", or leave blank. This will coincide with who are given admin access based on their CID)</label>
+                        <input type="text" name="admin" maxlength="10"/>
+                    </div>
+            <input class="submit" style="width:200px;background-color: #008CBA;" type="submit", name="submit_button" value="Submit">
+        </form>
+</div>
+{% endblock %}

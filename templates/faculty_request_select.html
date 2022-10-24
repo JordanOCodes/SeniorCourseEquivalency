@@ -1,0 +1,32 @@
+{% extends "template.html" %}
+{% block content %}
+
+<div class="testbox">
+        <form method="POST">
+    <h2 style="text-align:center">Please select a request that you would like to review.</h2>
+            <p style="text-align:center; color: darkred; font-size: 20px"><b><i>{{ info_text | safe }}</i></b></p>
+
+    <fieldset>
+                <legend>List of Student Requests</legend>
+    <div style="margin-right: 10%;margin-left: 10%">
+            <h3 style="font-size: 20px;">List of Student Requests</h3>
+                <p style="font-size: 15px;">
+                    Below is a list of individual student requests, ordered by UF class requested and date. Students have
+                    filled out a form giving the locations of each UF course topic within one of their files, which will
+                    all be displayed nicely for you. You will be able to look through the files and say if the classes
+                    taken outside of the CISE Department are equivalent.<br>
+                </p>
+            <select name="request" id="request" style="height:200px; width:100%;font-size: 25px;margin: 0 auto;display: block;top:100%;vertical-align: top;" size="6" required>
+                {{ html_request_select | safe}}
+            </select>
+            <br>
+            <input class="submit" style="background-color: #008CBA;width: 200px;" type="submit", name="submit_button" value="Select">
+    </div>
+</fieldset>
+
+        </form>
+
+
+
+</div>
+{% endblock %}

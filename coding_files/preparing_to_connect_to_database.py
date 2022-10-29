@@ -1,7 +1,4 @@
 from coding_files import connection_to_database
-import bcrypt
-import os
-from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg'}
 
@@ -23,5 +20,5 @@ def get_all_request_for_all_allowed_courses(list_of_allowed_courses):
     return list_of_requests
 
 
-if __name__ == '__main__':
-    print("yellowstone")
+# if __name__ == '__main__':
+#     print("yellowstone")

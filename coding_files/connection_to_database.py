@@ -17,7 +17,6 @@ def connection_to_mysql(is_online=False):
     :return: mysql connection object
     """
     if is_online:
-        print("online")
         config = {
             'user': 'joldham1',
             'password': 'CISECourse1234',
@@ -32,19 +31,20 @@ def connection_to_mysql(is_online=False):
             'password': 'root',
             'host': '127.0.0.1',
             'port': '3306',
-            'database': 'courseequivalency',
+            'database': 'courseequivalency2',
             'raise_on_warnings': True
         }
 
     try:
         cnx = mysql.connector.connect(**config)
     except mysql.connector.Error as err:
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("Something is wrong with your user name or password")
-        elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exist")
-        else:
-            print(err)
+        # if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+        #     print("Something is wrong with your user name or password")
+        # elif err.errno == errorcode.ER_BAD_DB_ERROR:
+        #     print("Database does not exist")
+        # else:
+        #     print(err)
+        return "error"
     else:
         return cnx
 
@@ -222,7 +222,7 @@ def insert_student_request_row(insert_list, request, request_key, home_path):
         getting_request_data_and_cleaning_it.put_files_into_directory(request, insert_list[0], home_path)
         return "Your Course Request has been successfully submitted, please look forward to a confirmation email sent to you!"
     except mysql.connector.Error as error:
-        print("parameterized query failed {}".format(error))
+        #print("parameterized query failed {}".format(error))
         return "Error when sending query to database, please look over your information and try again."
 
 
@@ -283,7 +283,7 @@ def check_if_already_in_all_requests_by_single_course(the_course, session_ufid):
         my_db.close()
         return [True, exists_request]
     except mysql.connector.Error as error:
-        print("parameterized query failed {}".format(error))
+        # print("parameterized query failed {}".format(error))
         return [False, False]
 
 
@@ -304,7 +304,7 @@ def check_if_already_in_all_archive_by_single_course(the_course, session_ufid):
                               WHERE UFCourseID = %s"""
         my_cursor.execute(sql_insert_query, tuple([the_course]))
         for request in my_cursor:
-            print(request)
+            # print(request)
             cur_request_info = list(request)
 
             if getting_request_data_and_cleaning_it.check_password(session_ufid, cur_request_info[1]):
@@ -313,7 +313,7 @@ def check_if_already_in_all_archive_by_single_course(the_course, session_ufid):
         my_db.close()
         return [True, exists_request]
     except mysql.connector.Error as error:
-        print("parameterized query failed {}".format(error))
+        # print("parameterized query failed {}".format(error))
         return [False, False]
 
 
@@ -338,7 +338,7 @@ def amount_request_in_a_course(the_course):
         my_db.close()
         return [True, cur_request_info[0]]
     except mysql.connector.Error as error:
-        print("parameterized query failed {}".format(error))
+        # print("parameterized query failed {}".format(error))
         return [False, "parameterized query failed {}".format(error)]
 
 
@@ -347,7 +347,7 @@ def get_request_and_course_row(request_id):
     try:
         my_db = connection_to_mysql()
         my_cursor = my_db.cursor(prepared=True)
-        sql_insert_query = """SELECT RequestKey.thekey, StudentRequest.*, Course.*  FROM StudentRequest
+        sql_insert_query = """SELECT RequestKey.TheKey, StudentRequest.*, Course.*  FROM StudentRequest
                               JOIN RequestKey ON StudentRequest.RequestID = RequestKey.RequestKeyID
                               JOIN Course ON StudentRequest.UFCourseID = Course.CourseID
                               WHERE RequestID = %s"""
@@ -511,4 +511,4 @@ def get_session_name_ufid(session_id):
 
 if __name__ == '__main__':
     red = amount_request_in_a_course('WAT5999')
-    print(red)
+    # print(red)

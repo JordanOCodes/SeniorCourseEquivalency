@@ -29,7 +29,6 @@ def student_request_confirmation(to_email, first_name, last_name, course_id, cou
 
 
 def student_request_denial(to_email, first_name, last_name, course_id, course_title, faculty_comments):
-    print("Email?")
     """
     to_email, first_name, last_name, course_id, course_title
     :return: A String that will easily format into an email

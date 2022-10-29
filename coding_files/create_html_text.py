@@ -123,5 +123,5 @@ def html_tabs(list_of_files, request_info_dict):
 
 
 
-if __name__ == '__main__':
-    print(html_add_course_topics())
+# if __name__ == '__main__':
+#     # print(html_add_course_topics())

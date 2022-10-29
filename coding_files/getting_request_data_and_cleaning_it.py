@@ -91,7 +91,6 @@ def get_student_request_info_to_list(request, request_key, home_path):
                                 request.form["second_sub_grade"], request.form["second_sub_email"],
                                 request.form["second_sub_textbook"], request.form["second_sub_author"]])
     else:
-        print("NO SECOND CLASS")
         sql_insert_list.append("0")
         sql_insert_list.extend(["N/A", "N/A",
                                 "0", "N/A",
@@ -309,16 +308,16 @@ def check_password(plain_text_password, hashed_password):
     return bcrypt.checkpw(plain_text_password, hashed_password)
 
 
-if __name__ == '__main__':
-    text = "88123456"
-    print(text)
-    request_key = Fernet.generate_key().decode("utf-8")
-    application_key = Fernet.generate_key().decode("utf-8")
-    cipher_text = encrypt_data(text, request_key)
-    cipher_key = encrypt_data(request_key, application_key)
-    print(cipher_text)
-    print(cipher_key)
-    print(len(cipher_key))
-    request_key2 = decode_data(cipher_key, application_key)
-    print(request_key2)
-    print(decode_data(cipher_text, request_key2))
+# if __name__ == '__main__':
+#     text = "88123456"
+#     print(text)
+#     request_key = Fernet.generate_key().decode("utf-8")
+#     application_key = Fernet.generate_key().decode("utf-8")
+#     cipher_text = encrypt_data(text, request_key)
+#     cipher_key = encrypt_data(request_key, application_key)
+#     print(cipher_text)
+#     print(cipher_key)
+#     print(len(cipher_key))
+#     request_key2 = decode_data(cipher_key, application_key)
+#     print(request_key2)
+#     print(decode_data(cipher_text, request_key2))

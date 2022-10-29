@@ -276,7 +276,6 @@ def review_course_equiv_request():
         request_status = request.form["ApprovedOrDenied"]
         request_key = Fernet.generate_key().decode("utf-8")
         insert_list = getting_request_data_and_cleaning_it.get_post_request_info_to_list(request, request_key)
-        print(request_status)
         if request_status == "Approved":
             session['info_text'] += connection_to_database.insert_student_request_archive(insert_list) + "<br>"
             sending_email.student_request_approve(request.form['email'], request.form['first_name'],
@@ -287,15 +286,12 @@ def review_course_equiv_request():
                                                                                            request.form["course_id"],
                                                                                            root_path)
         elif request_status == "Denied":
-            print("email?")
             sending_email.student_request_denial(request.form['email'], request.form['first_name'],
                                                  request.form['last_name'], request.form['course_id'],
                                                  request.form['course_title'], request.form['faculty_comments'])
-            print("HELLO")
             session['info_text'] += connection_to_database.remove_row_from_student_request(request.form["request_id"],
                                                                                            request.form["course_id"],
                                                                                            root_path)
-            print("HEY")
         return redirect(url_for("faculty_root"))
 
     if not request.args.get("request_id"):
@@ -423,9 +419,6 @@ def secret():
     return "<p>You've made it to the secret page!<br>" \
            "This was only made this for slight debugging purposes early on.<br>" \
            "I hope you enjoyed this little secret.</p>"
-
-
-
 
 
 if __name__ == '__main__':

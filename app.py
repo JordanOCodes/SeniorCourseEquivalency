@@ -54,12 +54,13 @@ def get_session_ufid():
     return ufid_str
 
 
-def get_session_name_ufid_list():
-    cipher_list = connection_to_database.get_session_name_ufid(session.get("session_id"))
+def get_session_name_ufid_email_list():
+    cipher_list = connection_to_database.get_session_name_ufid_email(session.get("session_id"))
     first_name = getting_request_data_and_cleaning_it.decode_data(cipher_list[0], session.get("key"))
     last_name = getting_request_data_and_cleaning_it.decode_data(cipher_list[1], session.get("key"))
     ufid = getting_request_data_and_cleaning_it.decode_data(cipher_list[2], session.get("key"))
-    return [first_name, last_name, ufid]
+    email = getting_request_data_and_cleaning_it.decode_data(cipher_list[3], session.get("key"))
+    return [first_name, last_name, ufid, email]
 
 
 def is_session_auth_student():
@@ -85,7 +86,6 @@ def is_current_session():
 @app.route('/')
 @app.route('/', methods=['POST'])
 def login():
-    session.clear()  # TODO DELETE THIS
     if is_current_session():
         if is_session_auth_faculty():
             return redirect(url_for("faculty_root"))
@@ -198,22 +198,22 @@ def faculty_course_modify():
 @app.route('/faculty_course_add')
 @app.route('/faculty_course_add', methods=['POST'])
 def faculty_course_add():
+
     if not is_session_auth_faculty():
         return redirect(url_for("login"))
     error_message = ""
     if request.method == 'POST':
         if request.form["course_id"].upper().replace("",
                                                      "") in connection_to_database.get_list_all_course_id():  # If course is already in db
-            error_message = "Course " + request.form["course_id"].upper().replace("",
-                                                                                  "") + " is already in the database! Please try " \
-                                                                                        "modifying it instead, or add a new course! "
+            session['info_text'] = request.form["course_id"].upper().replace("",
+                                            "") + " is already in the database! Please try modifying it instead, or add a new course!"
         else:
             insert_list = getting_request_data_and_cleaning_it.class_args_to_list(request.form)
             session['info_text'] = connection_to_database.insert_course_row(insert_list)
             return redirect(url_for("faculty_root"))
 
     topic_html = create_html_text.html_add_course_topics()
-    return render_template("faculty_course_add.html", topic_html=topic_html, error_message=error_message)
+    return render_template("faculty_course_add.html", topic_html=topic_html)
 
 
 @app.route('/faculty_course_delete')
@@ -244,6 +244,49 @@ def faculty_course_delete():
     return render_template("faculty_course_delete.html", course_list=course_list)
 
 
+@app.route('/faculty_archived_select')
+@app.route('/faculty_archived_select', methods=['POST', 'GET'])
+def faculty_archived_select():
+    if not is_session_auth_faculty():
+        return redirect(url_for("login"))
+
+    info_text = session['info_text']
+    session['info_text'] = ""
+
+    # If the course has been selected, or to add a new course
+    if request.method == 'POST':
+        ufid = request.form["ufid"]
+        return redirect(url_for("faculty_archived_view", ufid=ufid))
+
+    return render_template("faculty_archived_select.html", info_text=info_text)
+
+@app.route('/faculty_archived_view')
+@app.route('/faculty_archived_view', methods=['POST', 'GET'])
+def faculty_archived_view():
+    if not is_session_auth_faculty():
+        return redirect(url_for("login"))
+    info_text = session['info_text']
+    session['info_text'] = ""
+    if not request.args.get("ufid"):
+        session['info_text'] = "Error in finding archived requests for that UFID."
+        return redirect(url_for("faculty_archived_select"))
+
+    student_ufid = request.args.get("ufid")
+    list_of_requests = connection_to_database.get_list_archived_requests(student_ufid)
+
+    if list_of_requests[0] != "None":
+        session['info_text'] = list_of_requests[0]
+        return redirect(url_for("faculty_archived_select"))
+    elif len(list_of_requests) < 2:
+        session['info_text'] = "Could not find the student UFID " + str(student_ufid) + " in our archive."
+        return redirect(url_for("faculty_archived_select"))
+
+    list_of_requests.pop(0) # Remove First element, so only request are here
+
+    return render_template("faculty_archived_view.html", info_text=info_text, list_of_requests=list_of_requests,
+                           amt_request=len(list_of_requests))
+
+
 @app.route('/faculty_request_select')
 @app.route('/faculty_request_select', methods=['POST', 'GET'])
 def faculty_request_select():
@@ -254,7 +297,7 @@ def faculty_request_select():
 
     if request.method == 'POST':
         request_id = request.form["request"]
-        return redirect(url_for("review_course_equiv_request", request_id=request_id))
+        return redirect(url_for("faculty_review_request", request_id=request_id))
 
     list_of_allowed_courses = session['courses']
     list_of_requests = preparing_to_connect_to_database.get_all_request_for_all_allowed_courses(list_of_allowed_courses)
@@ -265,9 +308,9 @@ def faculty_request_select():
     return render_template("faculty_request_select.html", html_request_select=html_request_select, info_text=info_text)
 
 
-@app.route('/review_course_equiv_request')
-@app.route('/review_course_equiv_request', methods=['POST', 'GET'])
-def review_course_equiv_request():
+@app.route('/faculty_review_request')
+@app.route('/faculty_review_request', methods=['POST', 'GET'])
+def faculty_review_request():
     if not is_session_auth_faculty():
         return redirect(url_for("login"))
     root_path = os.path.dirname(__file__)
@@ -277,11 +320,11 @@ def review_course_equiv_request():
         request_key = Fernet.generate_key().decode("utf-8")
         insert_list = getting_request_data_and_cleaning_it.get_post_request_info_to_list(request, request_key)
         if request_status == "Approved":
-            session['info_text'] += connection_to_database.insert_student_request_archive(insert_list) + "<br>"
+            session['info_text'] += connection_to_database.insert_student_request_archive(insert_list, request_key) + "<br>"
             sending_email.student_request_approve(request.form['email'], request.form['first_name'],
                                                   request.form['last_name'], request.form['course_id'],
                                                   request.form['course_title'], request.form['faculty_comments'])
-            # TODO email school peeps
+
             session['info_text'] += connection_to_database.remove_row_from_student_request(request.form["request_id"],
                                                                                            request.form["course_id"],
                                                                                            root_path)
@@ -307,7 +350,7 @@ def review_course_equiv_request():
     course_topic_locations = [value for key, value in request_dict.items() if "TopicLoc" == key[:8]]
     html_tabs = create_html_text.html_tabs(file_list, request_dict)
 
-    return render_template("review_course_equiv_request.html", request_dict=request_dict, root_path=root_path,
+    return render_template("faculty_review_request.html", request_dict=request_dict, root_path=root_path,
                            course_topic_list=course_topic_list, course_topic_locations=course_topic_locations,
                            html_tabs=html_tabs, file_paths_list=file_paths_list)
 
@@ -341,7 +384,7 @@ def student_course_select():
 
     if request.method == 'POST':
         the_course = request.form["course"]
-        return redirect(url_for("course_equiv_student_form", the_course=the_course))
+        return redirect(url_for("student_course_equiv_form", the_course=the_course))
 
     course_list = connection_to_database.get_list_all_sorted_course_ids_and_courses_student()
     return render_template("student_course_select.html", course_list=course_list, info_text=info_text)
@@ -363,9 +406,9 @@ def check_if_user_already_has_request_in_database(the_course, session_ufid):
         return [False, "Error pulling data for " + the_course + ", please try again."]
 
 
-@app.route('/course_equiv_student_form')
-@app.route('/course_equiv_student_form', methods=['POST'])
-def course_equiv_student_form():
+@app.route('/student_course_equiv_form')
+@app.route('/student_course_equiv_form', methods=['POST'])
+def student_course_equiv_form():
     if not is_session_auth_student():
         return redirect(url_for("login"))
 
@@ -407,19 +450,20 @@ def course_equiv_student_form():
     list_of_topics_html = create_html_text.list_of_html_topics(course_info_list[4:])
     list_of_topics_visibility = create_html_text.list_of_html_topics_visibility(course_info_list[4:])
 
-    return render_template("course_equiv_student_form.html", course_id=course_info_list[0],
+    return render_template("student_course_equiv_form.html", course_id=course_info_list[0],
                            course_title=course_info_list[1],
                            credits=course_info_list[2], department=course_info_list[3], topic_html=topic_html,
                            list_of_topics_html=list_of_topics_html, list_of_topics_visibility=list_of_topics_visibility,
-                           session_info_list=get_session_name_ufid_list())
+                           session_info_list=get_session_name_ufid_email_list())
 
 
 @app.route('/secret')
 def secret():
+    session.clear()
     return "<p>You've made it to the secret page!<br>" \
            "This was only made this for slight debugging purposes early on.<br>" \
            "I hope you enjoyed this little secret.</p>"
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="http://127.0.0.1:5000")

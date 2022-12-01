@@ -1,0 +1,31 @@
+{% extends "template.html" %}
+{% block content %}
+
+<div class="testbox">
+        <form method="POST">
+    <h2 style="text-align:center">Please enter the UFID of the student archived request information you are trying to look up.</h2>
+            <p style="text-align:center; color: darkred; font-size: 20px"><b><i>{{ info_text | safe }}</i></b></p>
+
+    <fieldset>
+                <legend>Student Archived Info</legend>
+    <div style="margin-right: 10%;margin-left: 10%">
+            <h3 style="font-size: 20px;">Please enter the student's ID</h3>
+                <p style="font-size: 15px;">
+                    Below is an input field where you can enter teh student's UFID to view previously approved course equivalency requests.<br>
+                    Due to security purposes UFID's are hashed in the database and therefore you need to know the student's UFID to view their information.<br>
+                </p>
+            <div class="item">
+                        <label for="ufid">UFID (8 digit number.)<span>*</span></label>
+                        <input type="text" name="ufid" pattern="[0-9]{8}" placeholder="00000000" required/>
+                    </div>
+            <br>
+            <input class="submit" style="background-color: #008CBA;width: 200px;" type="submit", name="submit_button" value="Select">
+    </div>
+</fieldset>
+
+        </form>
+
+
+
+</div>
+{% endblock %}

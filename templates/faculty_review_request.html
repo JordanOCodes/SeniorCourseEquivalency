@@ -288,8 +288,9 @@
 {%for i in range(0, 20)%}
     {% if course_topic_list[i] != "" and course_topic_list[i] != "N/A" %}
         <div style="display: flex;flex-wrap: nowrap; flex-direction: row;  margin-bottom: 5px; justify-content: flex-start">
-            <div style="">
-                <input type="checkbox" class="checkbox" id="check_topic{{i}}" value="{{course_topic_locations[i]}}" required>
+            <div class="the_faculty_check_div" style="">
+                <input type="checkbox" class="checkbox" id="check_topic{{i}}" value="{{course_topic_locations[i]}}" style="display: none">
+                <span id="{{i}}" class="faculty_checks" onClick="facultyCheckClick.call(this);" style="color: black">&#9744;</span>
             </div>
             <div style="">
                 <span id="check_text{{i}}" style="display: inline;color: black;">
@@ -337,6 +338,23 @@ function openFile(the_id, fileName) {
 
 // Get the element that will be  defaulted to be open and click on it
 document.getElementById("tab0").click();
+
+
+
+function facultyCheckClick(){
+  if (this.innerHTML === "☐"){
+  	this.innerHTML = "&#9746";
+    this.style.color = "red";
+  }
+  else if (this.innerHTML === "☒"){
+  	this.innerHTML = "&#9745";
+    this.style.color = "green";
+  }
+  else if (this.innerHTML === "☑"){
+  	this.innerHTML = "&#9744";
+    this.style.color = "black";
+  }
+}
 </script>
 
 <br>
@@ -387,13 +405,6 @@ document.getElementById("tab0").click();
                 document.getElementById("popupDenyForm").style.display = "none";
             }
             function openApproveForm() {
-                  let checkboxes = document.getElementsByClassName("checkbox");
-                  for (i = 0; i < checkboxes.length; i++) {
-                     if (!(checkboxes[i].checked)) {
-                         checkboxes[i].reportValidity();
-                         return;
-                     }
-                  }
                 document.getElementById("popupApproveForm").style.display = "block";
             }
             function closeApproveForm() {

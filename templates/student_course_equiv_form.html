@@ -4,6 +4,8 @@
 
     <div class="testbox">
         <form id="student-form" method="POST" enctype="multipart/form-data">
+
+
             <h2 style="text-align:center; font-size: 25px;">CISE Course Equivalency Request<br><br>{{ course_id }}: {{ course_title }} Request Form</h2>
             <p style="text-align:center; font-size: 14px">Please fill out the form accurately and completely.<br>
                 This form is divided into two parts:<br>
@@ -35,7 +37,7 @@
                     <div class="item">
                         <label for="student_email">E-mail Address (To receive a receipt of this form after you finish)
                             <span>*</span></label>
-                        <input type="email" name="student_email" placeholder="student@ufl.edu" maxlength="100" required/>
+                        <input type="email" name="student_email" value="{{ session_info_list[3] | safe }}" readonly/>
                     </div>
                 </div>
             </fieldset>
@@ -544,20 +546,28 @@
                 }
                 function checkCheckBoxes() {
                     let amountOfFiles = countAmountOfFiles();
+
+                    let amtBoxes = 0;
+                    let amtCheckedBoxes = 0;
+
                     for (let x = 0; x < 20; x++) {
                         if (!(document.getElementById("list_of_html_topics_" + x.toString()).classList.contains("list_of_html_topics_display"))) {
                             continue
                         }
+                        amtBoxes += 1;
                         let checkedBoxesBooleans = [];
                         for (let i = 0; i < amountOfFiles; i++) {
                             checkedBoxesBooleans.push(document.getElementById(x.toString() + 'topic_file' + i.toString()).checked);
                         }
                         if (checkedBoxesBooleans.length > 0 && checkedBoxesBooleans.some((value) => value === true)) {
-                        } else {
-                            alert("Please make sure that Topic " + (x+1) + " is located in one of your files.");
-                            document.getElementById("list_of_html_topics_" + x.toString()).scrollIntoView();
-                            return false;
+                            amtCheckedBoxes += 1;
                         }
+                    }
+                    if ( (amtCheckedBoxes / amtBoxes) < 0.8) {
+                        let amtNeededStr = Math.ceil(amtBoxes * 0.8 ).toString();
+                        alert("Please make sure that at least " + amtNeededStr + " Topics out of " + amtBoxes.toString() + ", are found in your files.");
+                         document.getElementById("list_of_html_topics_0").scrollIntoView();
+                         return false;
                     }
 
                     return true;

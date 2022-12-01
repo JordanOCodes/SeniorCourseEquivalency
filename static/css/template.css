@@ -298,3 +298,20 @@
     font-weight: lighter;
     font-size: 12px
 }
+
+
+.faculty_checks {
+            color: black;
+            font-size: 34px;
+            display: inline-block;
+            border-radius: 30px;
+            width: 30px;
+            height: 20px;
+            vertical-align: middle;
+            margin-top: 2px;
+       }
+
+.the_faculty_check_div:hover {
+
+    text-shadow: 2px 2px;
+}

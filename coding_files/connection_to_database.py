@@ -6,6 +6,10 @@ import mysql.connector
 from mysql.connector import errorcode
 from coding_files import preparing_to_connect_to_database, getting_request_data_and_cleaning_it
 import os
+import sys
+
+sys.path.append("../..")
+import connect_to_online_database
 
 
 def connection_to_mysql(is_online=False):
@@ -17,14 +21,15 @@ def connection_to_mysql(is_online=False):
     :return: mysql connection object
     """
     if is_online:
-        config = {
-            'user': 'joldham1',
-            'password': 'CISECourse1234',
-            'host': 'mysql.cise.ufl.edu',
-            'port': '3306',
-            'database': 'CourseEquivalency',
-            'raise_on_warnings': True
-        }
+        return connect_to_online_database.connection_to_mysql()
+        # config = {
+        #     'user': 'joldham1',
+        #     'password': 'CISECourse1234',
+        #     'host': 'mysql.cise.ufl.edu',
+        #     'port': '3306',
+        #     'database': 'CourseEquivalency',
+        #     'raise_on_warnings': True
+        # }
     else:
         config = {
             'user': 'root',
@@ -160,7 +165,7 @@ def modify_course_row(insert_list):
 
 
 def get_course_row(the_course):
-    course_info = ()
+    course_info = []
     try:
         my_db = connection_to_mysql()
         my_cursor = my_db.cursor(prepared=True)
@@ -168,7 +173,6 @@ def get_course_row(the_course):
         my_cursor.execute(sql_insert_query, tuple([the_course]))
         for course in my_cursor:
             course_info = list(course)
-            break
 
         my_cursor.close()
         my_db.close()
@@ -222,7 +226,7 @@ def insert_student_request_row(insert_list, request, request_key, home_path):
         getting_request_data_and_cleaning_it.put_files_into_directory(request, insert_list[0], home_path)
         return "Your Course Request has been successfully submitted, please look forward to a confirmation email sent to you!"
     except mysql.connector.Error as error:
-        #print("parameterized query failed {}".format(error))
+        # print("parameterized query failed {}".format(error))
         return "Error when sending query to database, please look over your information and try again."
 
 
@@ -407,7 +411,7 @@ def remove_row_from_student_request(request_id, uf_course_id, home_path):
         return "parameterized query failed {}".format(error)
 
 
-def insert_student_request_archive(insert_list):
+def insert_student_request_archive(insert_list, request_key):
     try:
         my_db = connection_to_mysql()
         my_cursor = my_db.cursor(prepared=True)
@@ -430,13 +434,57 @@ def insert_student_request_archive(insert_list):
                 VALUES (%s,%s)
                  """
         insert_tuple = preparing_to_connect_to_database.insert_list_to_sql_tuple(insert_list)
+        insert_key_tuple = tuple([insert_list[0], request_key])
+
         my_cursor.execute(sql_insert_query, insert_tuple)
+        my_cursor.execute(sql_key_insert_query, insert_key_tuple)
         my_db.commit()
         my_cursor.close()
         my_db.close()
         return "Student has been successfully added to the archive."
     except mysql.connector.Error as error:
         return "parameterized query failed {}".format(error)
+
+
+def get_list_archived_requests(ufid):
+    archived_list = []
+    try:
+        my_db = connection_to_mysql()
+        my_cursor = my_db.cursor(prepared=True)
+        sql_insert_query = """SELECT ApprovedKey.TheKey, ApprovedRequest.*  FROM ApprovedRequest 
+                                      JOIN ApprovedKey ON ApprovedRequest.ID = ApprovedKey.KeyID"""
+
+        my_cursor.execute(sql_insert_query)
+        for archived_request in my_cursor:
+            request_list = list(archived_request)
+            if getting_request_data_and_cleaning_it.check_password(ufid, request_list[5]):
+                request_list[5] = ufid
+                request_list[3] = getting_request_data_and_cleaning_it.decode_data(request_list[3], request_list[0]) # first name
+                request_list[4] = getting_request_data_and_cleaning_it.decode_data(request_list[4], request_list[0]) # last name
+                request_list[6] = getting_request_data_and_cleaning_it.decode_data(request_list[6], request_list[0]) # email
+                archived_list.append(request_list)
+
+        my_cursor.close()
+        my_db.close()
+        archived_list.insert(0, "None")
+        return archived_list
+    except mysql.connector.Error as error:
+        return ["parameterized query failed {}".format(error)]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def insert_session(insert_list):
@@ -492,12 +540,12 @@ def get_session_ufid(session_id):
         return "parameterized query failed {}".format(error)
 
 
-def get_session_name_ufid(session_id):
+def get_session_name_ufid_email(session_id):
     session_user_info = []
     try:
         my_db = connection_to_mysql()
         my_cursor = my_db.cursor(prepared=True)
-        sql_insert_query = """SELECT FirstNameCode, LastNameCode, UFIDCode FROM Session WHERE SessionID = %s"""
+        sql_insert_query = """SELECT FirstNameCode, LastNameCode, UFIDCode, emailCode FROM Session WHERE SessionID = %s"""
         my_cursor.execute(sql_insert_query, tuple([session_id]))
         for info in my_cursor:
             session_user_info = list(info)
@@ -509,6 +557,6 @@ def get_session_name_ufid(session_id):
         return "parameterized query failed {}".format(error)
 
 
-if __name__ == '__main__':
-    red = amount_request_in_a_course('WAT5999')
-    # print(red)
+# if __name__ == '__main__':
+#     red = amount_request_in_a_course('WAT5999')
+#     # print(red)

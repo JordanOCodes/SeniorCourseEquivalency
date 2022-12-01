@@ -139,9 +139,12 @@ def check_if_files_are_empty(request):
 
 
 def put_files_into_directory(request, request_id, home_path):
+    file_slash = "/"
+    if os.name == "nt":
+        file_slash = "\\"
 
-    course_path = home_path + "\\static" + "\\" + "student_request_files\\" + request.form["course_id"]
-    student_path = course_path + "\\" + request_id
+    course_path = home_path + file_slash + "static" + file_slash + "student_request_files" + file_slash + request.form["course_id"]
+    student_path = course_path + file_slash + request_id
     course_path_exists = os.path.exists(course_path)
     if not course_path_exists:
         os.makedirs(course_path)
@@ -176,12 +179,15 @@ def put_files_into_directory(request, request_id, home_path):
 
 
 def remove_files_and_directory(request_id, uf_course_id, home_path):
+    file_slash = "/"
+    if os.name == "nt":
+        file_slash = "\\"
 
-    course_path = home_path + "\\static" + "\\" + "student_request_files\\" + uf_course_id
-    student_path = course_path + "\\" + request_id
+    course_path = home_path + file_slash + "static" + file_slash + "student_request_files" + file_slash + uf_course_id
+    student_path = course_path + file_slash + request_id
     files = os.listdir(student_path)
     for file in files:
-        os.remove(student_path + "\\" + file)
+        os.remove(student_path + file_slash + file)
     os.rmdir(student_path)
     return ""
 
@@ -310,14 +316,6 @@ def check_password(plain_text_password, hashed_password):
 
 # if __name__ == '__main__':
 #     text = "88123456"
-#     print(text)
-#     request_key = Fernet.generate_key().decode("utf-8")
-#     application_key = Fernet.generate_key().decode("utf-8")
-#     cipher_text = encrypt_data(text, request_key)
-#     cipher_key = encrypt_data(request_key, application_key)
-#     print(cipher_text)
-#     print(cipher_key)
-#     print(len(cipher_key))
-#     request_key2 = decode_data(cipher_key, application_key)
-#     print(request_key2)
-#     print(decode_data(cipher_text, request_key2))
+#     hass = get_hashed_password(text)
+#     no = check_password(text, hass)
+#     print(no)

@@ -2,7 +2,7 @@ import os
 import uuid
 from datetime import date
 from werkzeug.utils import secure_filename
-import bcrypt
+from werkzeug.security import generate_password_hash, check_password_hash
 from cryptography.fernet import Fernet
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg'}
@@ -305,13 +305,12 @@ def decode_data(cipher_string, key_str):
 
 def get_hashed_password(plain_text_password):
     # Hash a password for the first time
-    #   (Using bcrypt, the salt is saved into the hash itself)
-    return bcrypt.hashpw(plain_text_password, bcrypt.gensalt(12))
+    return generate_password_hash(plain_text_password)
 
 
 def check_password(plain_text_password, hashed_password):
-    # Check hashed password. Using bcrypt, the salt is saved into the hash itself
-    return bcrypt.checkpw(plain_text_password, hashed_password)
+    # Check hashed password
+    return check_password_hash(hashed_password, plain_text_password)
 
 
 # if __name__ == '__main__':

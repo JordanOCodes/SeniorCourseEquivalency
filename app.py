@@ -9,6 +9,9 @@ from coding_files import create_html_text, connection_to_database, getting_reque
 import os
 import uuid
 from cryptography.fernet import Fernet
+import sys
+sys.path.insert(0, '/h/cnswww-course-equivalency-request.cise/course-equivalency-request.cise.ufl.edu/cgi-bin/env/Lib/site-packages')
+
 
 app = Flask(__name__)
 SESSION_TYPE = 'redis'

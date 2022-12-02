@@ -336,7 +336,7 @@ def amount_request_in_a_course(the_course):
         exists_request = False
         my_db = connection_to_mysql()
         my_cursor = my_db.cursor(prepared=True)
-        sql_insert_query = """SELECT count(*) FROM studentrequest 
+        sql_insert_query = """SELECT count(*) FROM StudentRequest 
                               WHERE UFCourseID = %s;"""
         my_cursor.execute(sql_insert_query, tuple([the_course]))
         for request in my_cursor:

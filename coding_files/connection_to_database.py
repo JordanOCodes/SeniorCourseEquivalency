@@ -15,7 +15,7 @@ else:
 import connect_to_online_database
 
 
-def connection_to_mysql(is_online=False):
+def connection_to_mysql(is_online=True):
     """
     This will connect to the mysql database using the parameters stated below
     Be careful!!! Must return connection object "cnx"

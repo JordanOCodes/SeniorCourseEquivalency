@@ -8,7 +8,10 @@ from coding_files import preparing_to_connect_to_database, getting_request_data_
 import os
 import sys
 
-sys.path.append("../..")
+if os.name == "nt":
+    sys.path.append("../..")
+else:
+    sys.path.append("..")
 import connect_to_online_database
 
 

@@ -1,0 +1,241 @@
+CREATE TABLE Course (
+CourseID varchar(10) PRIMARY KEY,
+CourseTitle varchar(150) NOT NULL,
+Credits tinyint DEFAULT 0,
+Department varchar(50) DEFAULT 'N/A',
+Topic1 varchar(150) DEFAULT 'N/A',
+Topic2 varchar(150) DEFAULT 'N/A',
+Topic3 varchar(150) DEFAULT 'N/A',
+Topic4 varchar(150) DEFAULT 'N/A',
+Topic5 varchar(150) DEFAULT 'N/A',
+Topic6 varchar(150) DEFAULT 'N/A',
+Topic7 varchar(150) DEFAULT 'N/A',
+Topic8 varchar(150) DEFAULT 'N/A',
+Topic9 varchar(150) DEFAULT 'N/A',
+Topic10 varchar(150) DEFAULT 'N/A',
+Topic11 varchar(150) DEFAULT 'N/A',
+Topic12 varchar(150) DEFAULT 'N/A',
+Topic13 varchar(150) DEFAULT 'N/A',
+Topic14 varchar(150) DEFAULT 'N/A',
+Topic15 varchar(150) DEFAULT 'N/A',
+Topic16 varchar(150) DEFAULT 'N/A',
+Topic17 varchar(150) DEFAULT 'N/A',
+Topic18 varchar(150) DEFAULT 'N/A',
+Topic19 varchar(150) DEFAULT 'N/A',
+Topic20 varchar(150) DEFAULT 'N/A'
+);
+
+
+CREATE TABLE StudentRequest (
+RequestID varchar(45) PRIMARY KEY,
+TheDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+-- Student info
+FirstNameCode varchar(200) NOT NULL,
+LastNameCode varchar(200) NOT NULL,
+UFIDCode varchar(200) NOT NULL,
+emailCode varchar(300) NOT NULL,
+-- UF Course
+UFCourseID varchar(10) NOT NULL,
+FOREIGN KEY (UFCourseID) 
+	REFERENCES Course(CourseID)
+    ON DELETE CASCADE,
+-- Requested course substitution 1
+FirstCourseId varchar(20) NOT NULL,
+FirstCourseTitle varchar (150) NOT NULL,
+FirstCredits tinyint DEFAULT 0 NOT NULL,
+FirstUniversity varchar(100) NOT NULL,
+FirstDepartment varchar(50),
+FirstTerm varchar(15) NOT NULL,
+FirstGrade varchar(10) NOT NULL,
+FirstInstructorEmail varchar(100) NOT NULL, 
+FirstTextbook varchar(100) NOT NULL,
+FirstAuthor varchar(100) NOT NULL,
+-- Requested course substitution 2
+IsSecondClass varchar(1),
+SecondCourseId varchar(20),
+SecondCourseTitle varchar (150),
+SecondCredits tinyint DEFAULT 0,
+SecondUniversity varchar(100),
+SecondDepartment varchar(50),
+SecondTerm varchar(15),
+SecondGrade varchar(10),
+SecondInstructorEmail varchar(100), 
+SecondTextbook varchar(100),
+SecondAuthor varchar(100),
+-- Topics
+TopicLoc1 varchar(24) NOT NULL,
+TopicLoc2 varchar(24) NOT NULL,
+TopicLoc3 varchar(24) NOT NULL,
+TopicLoc4 varchar(24) NOT NULL,
+TopicLoc5 varchar(24) NOT NULL,
+TopicLoc6 varchar(24) NOT NULL,
+TopicLoc7 varchar(24) NOT NULL,
+TopicLoc8 varchar(24) NOT NULL,
+TopicLoc9 varchar(24) NOT NULL,
+TopicLoc10 varchar(24) NOT NULL,
+TopicLoc11 varchar(24) NOT NULL,
+TopicLoc12 varchar(24) NOT NULL,
+TopicLoc13 varchar(24) NOT NULL,
+TopicLoc14 varchar(24) NOT NULL,
+TopicLoc15 varchar(24) NOT NULL,
+TopicLoc16 varchar(24) NOT NULL,
+TopicLoc17 varchar(24) NOT NULL,
+TopicLoc18 varchar(24) NOT NULL,
+TopicLoc19 varchar(24) NOT NULL,
+TopicLoc20 varchar(24) NOT NULL,
+-- file metadata
+AmountFirstFiles tinyint NOT NULL,
+AmountSecondFiles tinyint NOT NULL,
+OtherComments varchar(500)
+);
+
+CREATE TABLE RequestKey(
+RequestKeyID varchar(45) PRIMARY KEY,
+FOREIGN KEY (RequestKeyID) 
+	REFERENCES StudentRequest(RequestID)
+    ON DELETE CASCADE,
+TheKey char(100)
+);
+
+CREATE TABLE ApprovedRequest (
+ID varchar(45) PRIMARY KEY,
+TheDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+FirstNameCode varchar(200) NOT NULL,
+LastNameCode varchar(200) NOT NULL,
+HashedUFID VARCHAR(150) CHARACTER SET ascii COLLATE ascii_bin,
+emailCode varchar(300) NOT NULL,
+-- UF Course
+UFCourseID varchar(10),
+UFCourseTitle varchar(150) NOT NULL,
+UFCredits tinyint DEFAULT 0,
+UFDepartment varchar(50) DEFAULT 'N/A',
+-- Requested course substitution 1
+FirstCourseId varchar(20) NOT NULL,
+FirstCourseTitle varchar (150) NOT NULL,
+FirstCredits tinyint DEFAULT 0 NOT NULL,
+FirstUniversity varchar(100) NOT NULL,
+FirstTerm varchar(15) NOT NULL,
+FirstGrade varchar(10) NOT NULL,
+-- Requested course substitution 2
+IsSecondClass varchar(1),
+SecondCourseId varchar(20),
+SecondCourseTitle varchar (150),
+SecondCredits tinyint DEFAULT 0,
+SecondUniversity varchar(100),
+SecondTerm varchar(15),
+SecondGrade varchar(10),
+FacultyComments varchar(500)
+);
+
+CREATE TABLE ApprovedKey(
+KeyID varchar(45) PRIMARY KEY,
+FOREIGN KEY (KeyID) 
+	REFERENCES ApprovedRequest(ID)
+    ON DELETE CASCADE,
+TheKey char(100)
+);
+
+CREATE TABLE FacultyCourse(
+CourseID varchar(10),
+email varchar(100)
+);
+
+CREATE TABLE Session (
+SessionID varchar(45) PRIMARY KEY,
+TheDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+-- Student info
+FirstNameCode varchar(200) NOT NULL,
+LastNameCode varchar(200) NOT NULL,
+UFIDCode varchar(200) NOT NULL,
+emailCode varchar(300) NOT NULL,
+AuthCode varchar(200) NOT NULL
+);
+
+SET GLOBAL event_scheduler = ON;
+CREATE EVENT recycling ON SCHEDULE EVERY 1 HOUR ENABLE 
+DO 
+DELETE FROM Session WHERE Session.TheDate < CURRENT_TIMESTAMP - INTERVAL 24 HOUR;
+
+
+
+ INSERT INTO Course(CourseID, CourseTitle, Credits, Department,
+Topic1,Topic2,Topic3,Topic4,Topic5,Topic6,Topic7,Topic8,Topic9,
+Topic10,Topic11,Topic12,Topic13,Topic14,Topic15,Topic16,Topic17,Topic18,Topic19,Topic20)
+VALUES
+('CEN3031','Intro to Software Engineering',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CNT6107','Advanced Computer Networks',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COP5536','Advanced Data Structures',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP6617','Advanced Machine Learning',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COP3504','Advanced Programming Fundamentals',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP4053','AI for Computer Games',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COT5405','Analysis of Algorithms',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COT3100','Applications of Discrete Structures',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP5510','Bioinformatics',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CIS6930','Blockchain',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CEN3913','CISE Design 1',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CEN4914','CISE Design 2',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CIS4914','CISE Senior Project',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CIS4360','Computer and Information Security',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CNT5410','Computer and Network Security',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CDA4102','Computer Architecture',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CDA5155','Computer Architecture Principles',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP5705','Computer Graphics',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CNT4007','Computer Network Fundamentals',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CNT5106','Computer Networks',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CNT5106C','Computer Networks',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CDA3101','Computer Organization',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COP3275','Computer Programming using C',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COP2800','Computer Programming Using JAVA',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP5416','Computer Vision',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CGS3063','Computers and Modern Society',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CIS4362','Cryptology',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CIS4715','CS Teaching & Learning',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CIS4930','CS Teaching & Learning',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP4770','Data Sciences',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COP3530','Data Structures & Algorithms',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP5404','Deep Learning for Computer Graphics',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP4613','Deep Learning for Computer Graphics',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CNT6885','Distributed Multimedia Systems',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CDA4630','Embedded Systems',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CDA5636','Embedded Systems',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CIS4213','Enterprise Security',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CIS6935','Graduate Seminar',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CEN4721','Human Computer Interaction',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP5100','Human-Computer Interaction',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CIS4301','Information and Database Systems I',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP3220','Introduction to Computer-Aided Modeling',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CIS5371','Introduction to Cryptology',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP5771','Introduction to Data Science',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP3027','Introduction to Digital Arts and Sciences',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP6610','Machine Learning',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COT5615','Math for Intelligent Systems',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP6516','Medical Image Analysis',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CNT5517','Mobile Computing',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP4641','Natural Language Processing',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CEN4725','Natural User Interactions',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CEN5726','Natural User Interactions',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP6615','Neural Networks',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COT4501','Numerical Analysis',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COP4331','Object-Oriented Programming',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COP4600','Operating Systems',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CIS4204','Penetration Testing--Ethical Hacking',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COP3502','Programming Fundamentals 1',3,'CISE','Machine code, source code, compilation, &execution','Variables, data types, arithmetic, & basic IO','Selection and Flow Control (if/else; for; while)','Methods / functions (creation, invocation)','Objects, classes, and inheritance (includingabstract classes and interfaces)','Source control systems (like Git or SVN)','Use of a debugger suite','Try / catch / exception handling','Octal / hex / binary numbers','Big-O notation and basic complexity analysis','Logic fundamentals (including contrapositive /exclusive or / truth tables)','Programming paradigms (imperative,procedural, object-oriented, functional)','Recursion theory & coding','Stack and heap, and how they relate to variablereferences, objects, and value types','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COP3503','Programming Fundamentals 2',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COP4020','Programming Language Concepts',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COP5556','Programming Language Principles',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CEN5035','Software Engineering',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CEN4072','Software Testing and Verification',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CEN6070','Software Testing and Verification',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP3020','Theory and Practice of Multimedia Production',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('COT6315','Theory of Computation',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CEN5728','User Experience Design',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CEN4722','User Experience Design',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP4930','VR for the Social Good',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A'),
+('CAP6930','VR for the Social Good',0,'CISE','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A','N/A');    
+
+
+
+
+
+
+

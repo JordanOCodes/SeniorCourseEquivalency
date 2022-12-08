@@ -13,8 +13,11 @@ This application is meant to run on a specific website, however, if you wish to 
 If you wish to run it online as it's intended, there should be a file outside of the directory that that function calls
 2) In coding_files.sending_emails.py send_email(to_email, message): the current email and passcode is an old email and passcode of the original creator, it won't be working for long, feel free to change this for proper email sending.
 3) mysql_add.txt is a bunch of SQL queries to be able to create your own mysql set up to run a database along with this application.
+4) After creating a virtual environment run "python3 -m pip install -r requirements.txt" to download all the required libraries. (Possibly pip3 depending on your version) 
 
 In the proper online use a file index.cgi calls this function in order to work properly.
 A .htaccess file in htdocs calls this cgi file when the index page is called.
+This is done in the shared apache server
+
 
 ## How to use
